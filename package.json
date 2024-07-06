@@ -1,6 +1,6 @@
 {
     "name": "create-atri",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "",
     "bin": {
         "create-atri": "dist/index.js"
