@@ -1,0 +1,37 @@
+{
+    "name": "create-atri",
+    "version": "4.0.2",
+    "description": "",
+    "bin": {
+        "create-atri": "dist/index.js"
+    },
+    "file": [
+        "dist",
+        "template"
+    ],
+    "scripts": {
+        "dev": "tsup --watch --onSuccess \"npm link\"",
+        "build": "tsup --minify && npm link",
+        "typecheck": "tsc --noEmit",
+        "release": "npm run typecheck && release-it"
+    },
+    "keywords": [
+        "cli",
+        "atri",
+        "vue"
+    ],
+    "author": "huanxiaomang",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/prompts": "^2.4.9",
+        "prompts": "^2.4.2",
+        "release-it": "^17.2.1",
+        "tsup": "^8.0.2",
+        "typescript": "^5.4.5"
+    },
+    "release-it": {},
+    "dependencies": {
+        "chalk": "^4.0.0",
+        "console-png": "^1.2.1"
+    }
+}
