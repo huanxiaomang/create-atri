@@ -1,12 +1,47 @@
 #!/usr/bin/env node
-const { spawn } = require('child_process');
 import prompts from "prompts";
 import path from "node:path";
 import fs from "node:fs";
 import chalk from "chalk";
+import { TemplateName, choices, nameToRepoURL, projGuideCommands } from "./constants";
+import { cloneTemplateTo } from "./clone";
+
+
 const bootstrap = async () => {
-    //别动字体画，这样能正常显示！！！！！！！！！！！！！
-    console.log(`⣿⣿⣿⠟⠛⠛⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⢋⣩⣉⢻⣿⣿
+    welcome();
+    const result = await prompts([
+        {
+            type: "text",
+            name: "projectName",
+            message: "请输入项目名称(输入.直接在当前目录创建):"
+        },
+        {
+            type: 'select',
+            name: 'projectSelect',
+            message: '请选择项目类型:',
+            choices,
+            initial: 0
+        }
+
+    ]);
+    const targetPath = path.resolve(
+        process.cwd(),
+        result.projectName === '.' ? '' : result.projectName
+    );
+
+    const repoName = result.projectSelect;
+    const isSuccess = await cloneTemplateTo(repoName, targetPath);
+
+    isSuccess && successLog(repoName, result.projectName);
+
+
+};
+bootstrap();
+
+
+function welcome() {
+    console.log(`
+⣿⣿⣿⠟⠛⠛⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⢋⣩⣉⢻⣿⣿
 ⣿⣿⣿⠀⣿⣶⣕⣈⠹⠿⠿⠿⠿⠟⠛⣛⢋⣰⠣⣿⣿⠀⣿⣿
 ⣿⣿⣿⡀⣿⣿⣿⣧⢻⣿⣶⣷⣿⣿⣿⣿⣿⣿⠿⠶⡝⠀⣿⣿
 ⣿⣿⣿⣷⠘⣿⣿⣿⢏⣿⣿⣋⣀⣈⣻⣿⣿⣷⣤⣤⣿⡐⢿⣿
@@ -18,61 +53,16 @@ const bootstrap = async () => {
 ⣿⣿⣿⣿⠟⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⣿⣿
 ⣿⣿⣿⠋⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⣿⣿
 ⣿⣿⠋⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⢸⣿
-    `)
-    //还有这里！！！！！！！！！！！！！！！！！！！！！
+    `);
     console.log(`———————————————————————————————————————————————————`)
-    console.log(chalk.blue(`欢迎! 请创建你的项目`))
+    console.log(chalk.blue(`欢迎(●• ̀ω•́ )✧ 请创建你的项目`))
     console.log(`———————————————————————————————————————————————————`)
-    //————————————————————————————————————————————————————————————————————————————
-    const result = await prompts([
-        {
-            type: "text",
-            name: "projectName",
-            message: "请输入项目名称:"
-        },
-        {
-            type: 'select',
-            name: 'projectSelect',
-            message: '请选择项目类型:',
-            choices: [
-                { title: chalk.cyan("cocovite"), value: "cocovite" },
-                { title: chalk.green('npmvite'), value: "npmvite" },
-                { title: chalk.blue('uivite'), value: "uivite" },
-                { title: chalk.magenta('projectExample'), value: "projectExample" }
-            ],
-            initial: 0
-        }
+}
 
-    ]);
-    //管理控制台输入
-    //————————————————————————————————————————————————————————————————————————————————————————————————
-    const targetPath = path.resolve(process.cwd(), result.projectName);
-    let sourcePath: string = "";
-    function projectSelectfn(projectName: string) {
-        sourcePath = path.resolve(__dirname, `../template/${projectName}`);
-    }
-    projectSelectfn(result.projectSelect);
-    // Copy files from sourcePath to targetPath
-    fs.cpSync(sourcePath, targetPath, { recursive: true });
-    // Update package.json
-    const packageJsonPath = path.resolve(targetPath, 'package.json');
-    const packageJson = require(packageJsonPath);
-    packageJson.name = result.projectName;
-    // Write the updated package.json back to the file
-    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-    // Rename _gitignore to .gitignore
-    fs.renameSync(
-        path.resolve(targetPath, "_gitignore"),
-        path.resolve(targetPath, ".gitignore")
-    );
-    //————————————————————————————————————————————————————————————————————————————————————————————————
-    //最后输出
+function successLog(repoName: TemplateName, path: string) {
 
-    console.log(`
-    恭喜狗修金sama，项目创建成功！！！！！
-    cd ${result.projectName}
-    pnpm i
-    pnpm run dev
-    `)
-};
-bootstrap();
+    console.log(
+        chalk.green(`创建成功`) +
+        `${projGuideCommands[repoName].map((c) => `\n     ${c}`.replaceAll('$PATH', path)).join('')}`
+    )
+}

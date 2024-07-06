@@ -1,13 +1,12 @@
 {
     "name": "create-atri",
-    "version": "4.0.2",
+    "version": "0.0.1",
     "description": "",
     "bin": {
         "create-atri": "dist/index.js"
     },
     "file": [
-        "dist",
-        "template"
+        "dist"
     ],
     "scripts": {
         "dev": "tsup --watch --onSuccess \"npm link\"",
@@ -32,6 +31,7 @@
     "release-it": {},
     "dependencies": {
         "chalk": "^4.0.0",
-        "console-png": "^1.2.1"
+        "console-png": "^1.2.1",
+        "degit": "^2.8.4"
     }
 }
