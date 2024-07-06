@@ -31,7 +31,6 @@
     "release-it": {},
     "dependencies": {
         "chalk": "^4.0.0",
-        "console-png": "^1.2.1",
         "degit": "^2.8.4"
     }
 }
