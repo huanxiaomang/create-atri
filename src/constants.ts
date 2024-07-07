@@ -4,6 +4,7 @@ import chalk from "chalk";
 export const nameToRepoURL = {
     'vue-lint-vitesse-lite': 'huanxiaomang/vue-lint-vitesse-lite',
     'npm-ts-tsup': 'huanxiaomang/npm-ts-tsup',
+    'antfu的vitesse': 'antfu-collective/vitesse',
 } as const;
 
 export type TemplateName = keyof typeof nameToRepoURL;
@@ -31,4 +32,9 @@ export const projGuideCommands: Record<TemplateName, string[]> = {
         'pnpm i',
         'pnpm dev'
     ],
+    'antfu的vitesse': [
+        'cd $PATH',
+        'pnpm i',
+        'pnpm dev'
+    ]
 } as const;

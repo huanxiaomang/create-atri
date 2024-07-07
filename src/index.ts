@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 import prompts from "prompts";
 import path from "node:path";
-import fs from "node:fs";
 import chalk from "chalk";
-import { TemplateName, choices, nameToRepoURL, projGuideCommands } from "./constants";
+import { TemplateName, choices, projGuideCommands } from "./constants";
 import { cloneTemplateTo } from "./clone";
 
 
